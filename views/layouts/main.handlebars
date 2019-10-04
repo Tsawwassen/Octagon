@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<!-- References a Handlebars partial in views/partials/head.handlebars -->			
+	{{>head}}
+  </head>
+
+  <body>
+  		<!-- Load navbar-->
+  		{{>navbar}}
+  		<main role="main" class="container">
+  			<div class="jumbotron">
+			<!-- Load view page  -->
+				{{{body}}} 
+			</div>
+		</main><!-- /.container -->
+
+
+	</div>
+
+	{{>bootstrap_footer}}
+    
+  </body>
+</html>

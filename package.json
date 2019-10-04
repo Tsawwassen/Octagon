@@ -1,0 +1,19 @@
+{
+  "name": "octagon",
+  "version": "1.0.0",
+  "description": "Octagon Web App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mitchell Smith",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "mongodb": "^3.3.2",
+    "mongojs": "^2.6.0",
+    "mongoose": "^5.7.3"
+  }
+}
