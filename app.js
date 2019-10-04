@@ -36,15 +36,16 @@ app.get('/store_add', function(req, res){
 });
 
 app.post('/store_add', function(req, res){
-	console.log("insdie post /store_add");
-	console.log(req.body);
 
 	db.stores.insert(req.body, function(err, docs){
-		console.log(err);
-		console.log(docs);
+		if(err){
+			console.log(err);
+		}
+		else{
+			res.end("added");
+		}
 	});
-	console.log("done post /store_add")
-	//res.render('store_add');
+
 });
 
 app.get('/store_view', function(req, res){
