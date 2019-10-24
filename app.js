@@ -40,7 +40,6 @@ app.get('/', function(req, res){
 });
 
 app.get('/store_add', function(req, res){
-	console.log("insdie get /store_add")
 	res.render('store_add');
 });
 
@@ -77,8 +76,25 @@ app.post('/stores_add', function(req, res){
 
 });
 
-app.get('/store_view', function(req, res){
+app.get('/stores_view', function(req, res){
 	res.render('stores_view');
+});
+
+app.get('/stores_list', function(req, res){
+	db.stores.find({}, { 'storeNumber': 1, 'address.streetAddress': 1 }, function(errFind, docsFind){
+		//console.log(docsFind);
+		res.json(docsFind);
+		
+	});
+});
+app.get('/store/:storeNumber', function(req, res){
+	console.log( req.params.storeNumber);
+	console.log("inside store:storeNumber");
+
+	db.stores.find({'storeNumber': req.params.storeNumber}, function(errFind,docsFind){
+		console.log(docsFind);
+		res.json(docsFind[0]);
+	});
 });
 
 app.get('/store_edit', function(req, res){

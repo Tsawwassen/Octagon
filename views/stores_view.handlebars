@@ -1,0 +1,99 @@
+<h3>View Store</h3>
+<div class="selectState">
+	<h5>Select Store </h5>
+	<select id="storeList" class="custome-select col-12">
+		<option selected>Select a Store</option>
+	</select>
+</div>
+
+<div class="selectedStore" style="display:none">
+	<table id="storeTable" class="table col-12 w-auto">
+		<tbody id="tableBody"></tbody>
+	</table>
+	 <div>
+  		<button type="button" id ="editStore" class="btn btn-primary">Edit</button>
+  	</div>
+</div>
+
+
+
+
+<script>
+	$( document ).ready(function() {
+    	$.ajax({
+			url: '/stores_list', 
+			type: 'GET',
+			contentType: 'application/json',
+			success: function(result) {
+				result.forEach(createStoreList);
+			}
+		});
+	});
+
+	function createStoreList(item){
+		$("#storeList").append("<option value='" + item.storeNumber + "'>" + item.storeNumber + " - "+ item.address.streetAddress + "</option>");
+	};
+
+	$("#storeList").change(function(){
+		$.ajax({
+			url: '/store/'+ $('#storeList').val(), 
+			type: 'GET',
+			contentType: 'application/json',
+			success: function(result) {
+
+				$('.selectedStore').show();
+
+				var table = document.getElementById('storeTable');
+				clearTable(table);
+
+				var tableBody = document.getElementById('tableBody');
+				buildTable(tableBody, result);
+
+
+
+
+				/*console.log("Store Number" + result.storeNumber);
+				console.log("Store streetAddress" + result.address.streetAddress);
+				console.log("Store City" + result.address.city);
+				console.log("Store Province" + result.address.province);
+				console.log("Store PostalCode" + result.address.postalCode);
+				console.log("Store Manager" + result.manager);
+				console.log("Store phoneNumber" + result.phoneNumber);*/
+			}
+		});
+	});
+
+	function buildTable(tableBody, result){
+		//tableBody.insertRow(-1).innerHTML = ''
+
+		var headers = ['Store Number', 'Street Address', 'City', 'Province', 'Prostal Code' , 'Manager', 'Phone Number'];
+		var  values = [result.storeNumber, result.address.streetAddress, result.address.city, result.address.province, result.address.postalCode, result.manager, result.phoneNumber];
+		var row;
+
+		for(var i = 0; i < headers.length; i++){
+			row = tableBody.insertRow(-1);
+			row.insertCell(0).innerHTML = headers[i];
+			row.insertCell(1).innerHTML = values[i];
+		}
+
+	};
+	function clearTable(table){
+		if(table.rows.length > 0){
+			while(table.rows.length > 0){
+				table.deleteRow(0);
+			}
+								
+		}
+	};
+	$("#editStore").click(function() { 
+		var table = document.getElementById('tableBody');
+		//console.log(table.rows.length);
+		//console.log(table.rows[1].cells[1].innerHTML);
+
+		for(var i = 0; i < table.rows.length ; i++){
+			console.log(table.rows[i].cells[1].innerHTML);
+		}
+	});
+
+
+</script>
