@@ -35,7 +35,6 @@ app.use(bodyParser.json());
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 app.get('/', function(req, res){
-	console.log("inside get /home");
 	res.render('home');
 });
 
@@ -44,9 +43,7 @@ app.get('/store_add', function(req, res){
 });
 
 app.post('/store_add', function(req, res){
-
 	db.stores.find({"storeNumber":req.body.storeNumber}, function(errFind, docsFind){
-		console.log(docsFind);
 		if(docsFind.length == 0){
 			db.stores.insert(req.body, function(err, docs){
 				if(err){
@@ -59,21 +56,17 @@ app.post('/store_add', function(req, res){
 		} else {
 			res.end("!added");
 		}
-	
 	});
-
 });
 
-app.post('/stores_add', function(req, res){
-	var form = new formidable.IncomingForm();
-
-	console.log(req.data);
-
-	//form.parse(req, function (err, fields, files) {
-	//});
-	//console.log(form);
-	//console.log(req);
-
+app.put('/store_edit', function(req, res){
+	db.stores.update({'storeNumber': req.body.storeNumber}, {$set: req.body}, function(errUpdate, resUpdate){
+		if(resUpdate.n == 1){
+			res.end("updated");
+		}else {
+			res.end("!updated");
+		}
+	});
 });
 
 app.get('/stores_view', function(req, res){
@@ -82,26 +75,15 @@ app.get('/stores_view', function(req, res){
 
 app.get('/stores_list', function(req, res){
 	db.stores.find({}, { 'storeNumber': 1, 'address.streetAddress': 1 }, function(errFind, docsFind){
-		//console.log(docsFind);
 		res.json(docsFind);
-		
 	});
 });
-app.get('/store/:storeNumber', function(req, res){
-	console.log( req.params.storeNumber);
-	console.log("inside store:storeNumber");
 
+app.get('/store/:storeNumber', function(req, res){
 	db.stores.find({'storeNumber': req.params.storeNumber}, function(errFind,docsFind){
-		console.log(docsFind);
 		res.json(docsFind[0]);
 	});
 });
 
-app.get('/store_edit', function(req, res){
-	console.log("insdie get /store_edit")
-});
 
-app.get('/store_delete', function(req, res){
-	console.log("insdie get /store_delete")
-});
 

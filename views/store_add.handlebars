@@ -45,7 +45,6 @@
 <script src="papaparse.min.js"></script>
 <script  type="text/javascript">
 	$("#addStore").click(function() { 
-		//console.log("click");
 		var store = {};
 		
 		store.storeNumber= $('#storeNumber').val();
@@ -57,32 +56,27 @@
 		store.manager= $('#manager').val();
 		store.phoneNumber= $('#phoneNumber').val();
 
-		console.log(JSON.stringify(store));
-
 		$.ajax({
-					url: "/store_add", 
-					type: "POST",
-					contentType: 'application/json',
-					data: JSON.stringify(store),
-					success: function(result) {
-
-						console.log(result);
-						//Redirect the user to the cmpleted order
-						//console.log("AJAX success: " + result);
-						if(result=="added"){	
-							$('.alert').removeClass("alert-danger");
-							$('.alert').addClass("alert-success");
-							$('.alert').show();
-							$('.alert').html("Added");
-						} else {
-							$('.alert').removeClass("alert-success");
-							$('.alert').addClass("alert-danger");
-							$('.alert').show();
-							$('.alert').html("Store is already in the system");
-						}
-						
-					}
-				});
+			url: "/store_add", 
+			type: "POST",
+			contentType: 'application/json',
+			data: JSON.stringify(store),
+			success: function(result) {
+				//Redirect the user to the cmpleted order
+				//console.log("AJAX success: " + result);
+				if(result=="added"){	
+					$('.alert').removeClass("alert-danger");
+					$('.alert').addClass("alert-success");
+					$('.alert').show();
+					$('.alert').html("Added");
+				} else {
+					$('.alert').removeClass("alert-success");
+					$('.alert').addClass("alert-danger");
+					$('.alert').show();
+					$('.alert').html("Store is already in the system");
+				}
+			}
+		});
 	});
 
 	/**$("#uploadStores").click(function() { 

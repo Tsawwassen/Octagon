@@ -12,6 +12,7 @@
 	</table>
 	 <div>
   		<button type="button" id ="editStore" class="btn btn-primary">Edit</button>
+  		<button type="button" id ="saveStore" class="btn btn-primary" style="display:none">Save</button>
   	</div>
 </div>
 
@@ -64,9 +65,10 @@
 	});
 
 	function buildTable(tableBody, result){
-		//tableBody.insertRow(-1).innerHTML = ''
+		$('#editStore').show();
+		$('#saveStore').hide();
 
-		var headers = ['Store Number', 'Street Address', 'City', 'Province', 'Prostal Code' , 'Manager', 'Phone Number'];
+		var headers = ['Store Number', 'Street Address', 'City', 'Province', 'Postal Code' , 'Manager', 'Phone Number'];
 		var  values = [result.storeNumber, result.address.streetAddress, result.address.city, result.address.province, result.address.postalCode, result.manager, result.phoneNumber];
 		var row;
 
@@ -86,14 +88,57 @@
 		}
 	};
 	$("#editStore").click(function() { 
-		var table = document.getElementById('tableBody');
-		//console.log(table.rows.length);
-		//console.log(table.rows[1].cells[1].innerHTML);
 
+		$('#editStore').hide();
+		$('#saveStore').show();
+		var table = document.getElementById('tableBody');
+		var oldValue;
 		for(var i = 0; i < table.rows.length ; i++){
-			console.log(table.rows[i].cells[1].innerHTML);
+
+			oldValue = table.rows[i].cells[1].innerHTML;
+			if(i == 0){
+	table.rows[i].cells[1].innerHTML = '<input class="form-control" type="text" value="' + oldValue + '" placeholder="' + oldValue + '" readonly>';
+			}else {
+				table.rows[i].cells[1].innerHTML = '<input class="form-control" type="text" value="' + oldValue + '"placeholder="' + oldValue + '">';
+			}
+			
 		}
 	});
 
+	$("#saveStore").click(function(){
+		var table = document.getElementById('tableBody');
+		var newValues = [];
+
+		for (var i = 0 ; i < table.rows.length ; i++){
+			newValues.push(table.rows[i].cells[1].firstChild.value);
+		}
+		var store = {};
+		
+		store.storeNumber= newValues[0];
+		store.address={};
+		store.address.streetAddress= newValues[1];
+		store.address.city= newValues[2];
+		store.address.province= newValues[3];
+		store.address.postalCode= newValues[4];
+		store.manager= newValues[5];
+		store.phoneNumber= newValues[6];
+
+		$.ajax({
+			url: "/store_edit", 
+			type: "PUT",
+			contentType: 'application/json',
+			data: JSON.stringify(store),
+			success: function(result) {
+				if(result == "updated"){
+					var table = document.getElementById('storeTable');
+					clearTable(table);
+					var tableBody = document.getElementById('tableBody');
+					buildTable(tableBody, store);
+				}else {
+					console.log('error updated store')
+				}
+			}
+		});
+	});
 
 </script>
