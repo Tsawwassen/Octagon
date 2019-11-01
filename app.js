@@ -75,7 +75,9 @@ app.get('/stores_view', function(req, res){
 
 app.get('/stores_list', function(req, res){
 	db.stores.find({}, { 'storeNumber': 1, 'address.streetAddress': 1 }, function(errFind, docsFind){
-		res.json(docsFind);
+		res.json(docsFind.sort( function(a,b){
+			return a.storeNumber.localeCompare(b.storeNumber);
+		}));
 	});
 });
 
@@ -112,7 +114,9 @@ app.get('/parts_view', function(req, res){
 });
 app.get('/parts_list', function(req, res){
 	db.parts.find({}, { 'partNumber': 1 }, function(errFind, docsFind){
-		res.json(docsFind);
+		res.json(docsFind.sort( function(a,b){
+			return a.partNumber.localeCompare(b.partNumber);
+		}));
 	});
 });
 app.get('/part/:partNumber', function(req, res){
@@ -129,3 +133,14 @@ app.put('/part_edit', function(req, res){
 		}
 	});
 });
+
+function sortJSONArray(prop){
+	return function(a, b) {  
+        if (a[prop] > b[prop]) {  
+            return 1;  
+        } else if (a[prop] < b[prop]) {  
+            return -1;  
+        }  
+        return 0;  
+    }
+}
