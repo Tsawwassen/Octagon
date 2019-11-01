@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 var mongojs = require('mongojs');
 //Used the create ObjectID to search the _id field
 var ObjectId = require('mongojs').ObjectID;
-var db = mongojs('octagon', ['stores']);
+var db = mongojs('octagon', ['stores', 'parts']);
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/loginapp');
 
@@ -80,10 +80,52 @@ app.get('/stores_list', function(req, res){
 });
 
 app.get('/store/:storeNumber', function(req, res){
-	db.stores.find({'storeNumber': req.params.storeNumber}, function(errFind,docsFind){
+	//db.stores.find({'storeNumber': req.params.storeNumber}, function(errFind,docsFind){
+	db.stores.find(req.params, function(errFind,docsFind){
 		res.json(docsFind[0]);
 	});
 });
 
+app.get('/part_add', function(req, res){
+	res.render('part_add');
+});
 
+app.post('/part_add', function(req, res){
+	db.parts.find({"partNumber": req.body.partNumber}, function(errFind, docsFind){
+		if(docsFind.length == 0){
+			db.parts.insert(req.body, function(err, docs){
+				if(err){
+					console.log(err);
+				}
+				else{
+					res.end("added");
+				}
+			})
+		} else {
+			res.end("!added");
+		}
+	});
+});
 
+app.get('/parts_view', function(req, res){
+	res.render('parts_view');
+});
+app.get('/parts_list', function(req, res){
+	db.parts.find({}, { 'partNumber': 1 }, function(errFind, docsFind){
+		res.json(docsFind);
+	});
+});
+app.get('/part/:partNumber', function(req, res){
+	db.parts.find(req.params, function(errFind,docsFind){
+		res.json(docsFind[0]);
+	});
+});
+app.put('/part_edit', function(req, res){
+	db.parts.update({'partNumber': req.body.partNumber}, {$set: req.body}, function(errUpdate, resUpdate){
+		if(resUpdate.n == 1){
+			res.end("updated");
+		}else {
+			res.end("!updated");
+		}
+	});
+});

@@ -1,0 +1,127 @@
+<h3>View Parts</h3>
+<div class="selectState">
+	<h5>Select Part </h5>
+	<select id="partList" class="custome-select col-12">
+		<option selected>Select a Part</option>
+	</select>
+</div>
+
+<div class="selectedPart" style="display:none">
+	<table id="partTable" class="table col-12 w-auto">
+		<tbody id="tableBody"></tbody>
+	</table>
+	 <div>
+  		<button type="button" id ="editPart" class="btn btn-primary">Edit</button>
+  		<button type="button" id ="savePart" class="btn btn-primary" style="display:none">Save</button>
+  	</div>
+</div>
+
+<script>
+	$( document ).ready(function() {
+    	$.ajax({
+			url: '/parts_list', 
+			type: 'GET',
+			contentType: 'application/json',
+			success: function(result) {
+				result.forEach(createPartList);
+			}
+		});
+	});
+
+	function createPartList(item){
+		$("#partList").append("<option value='" + item.partNumber + "'>" + item.partNumber + "</option>");
+	};
+
+	$("#partList").change(function(){
+		$.ajax({
+			url: '/part/'+ $('#partList').val(), 
+			type: 'GET',
+			contentType: 'application/json',
+			success: function(result) {
+
+				$('.selectedPart').show();
+
+				var table = document.getElementById('partTable');
+				clearTable(table);
+
+				var tableBody = document.getElementById('tableBody');
+				buildTable(tableBody, result);
+			}
+		});
+	});
+
+	function clearTable(table){
+		if(table.rows.length > 0){
+			while(table.rows.length > 0){
+				table.deleteRow(0);
+			}
+								
+		}
+	};
+
+	function buildTable(tableBody, result){
+		$('#editPart').show();
+		$('#savePart').hide();
+
+		var headers = ['Part Number', 'Description'];
+		var  values = [result.partNumber, result.partDescription, ];
+		var row;
+
+		for(var i = 0; i < headers.length; i++){
+			row = tableBody.insertRow(-1);
+			row.insertCell(0).innerHTML = headers[i];
+			row.insertCell(1).innerHTML = values[i];
+		}
+
+	};
+
+	$("#editPart").click(function() { 
+
+		$('#editPart').hide();
+		$('#savePart').show();
+		var table = document.getElementById('tableBody');
+		var oldValue;
+		for(var i = 0; i < table.rows.length ; i++){
+
+			oldValue = table.rows[i].cells[1].innerHTML;
+			if(i == 0){
+	table.rows[i].cells[1].innerHTML = '<input class="form-control" type="text" value="' + oldValue + '" placeholder="' + oldValue + '" readonly>';
+			}else {
+				table.rows[i].cells[1].innerHTML = '<input class="form-control" type="text" value="' + oldValue + '"placeholder="' + oldValue + '">';
+			}
+			
+		}
+	});
+
+	$("#savePart").click(function(){
+		var table = document.getElementById('tableBody');
+		var newValues = [];
+
+		for (var i = 0 ; i < table.rows.length ; i++){
+			newValues.push(table.rows[i].cells[1].firstChild.value);
+		}
+		var part = {};
+		
+		part.partNumber = newValues[0];
+		part.partDescription = newValues[1];
+	
+
+		$.ajax({
+			url: "/part_edit", 
+			type: "PUT",
+			contentType: 'application/json',
+			data: JSON.stringify(part),
+			success: function(result) {
+				if(result == "updated"){
+					var table = document.getElementById('partTable');
+					clearTable(table);
+					var tableBody = document.getElementById('tableBody');
+					buildTable(tableBody, part);
+				}else {
+					console.log('error updated part')
+				}
+			}
+		});
+	});
+
+</script>

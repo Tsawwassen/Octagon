@@ -1,0 +1,105 @@
+
+<h3>Add Part</h3>
+<form>
+ 	<div class="form-group">
+		<label for="partNumber">Part Number</label>
+    	<input type="text" class="form-control" id="partNumber"  placeholder="Part Number">
+	</div>
+	<div class="form-group">
+		<label for="partDescription">Part Description</label>
+		<input type="text" class="form-control" id="partDescription"  placeholder="Part Description">
+	</div>
+	<div>
+ 		<button type="button" id ="addPart" class="btn btn-primary">Submit</button>
+ 	</div>
+</form>
+<br />
+
+<script  type="text/javascript">
+	$("#addPart").click(function() { 
+		var part = {};
+		//console.log("click add part");
+		//store.storeNumber= $('#storeNumber').val();
+		part.partNumber = $('#partNumber').val();
+		part.partDescription = $('#partDescription').val();
+
+		console.log(part);
+
+
+
+		$.ajax({
+			url: "/part_add", 
+			type: "POST",
+			contentType: 'application/json',
+			data: JSON.stringify(part),
+			success: function(result) {
+				//Redirect the user to the cmpleted order
+				//console.log("AJAX success: " + result);
+				if(result=="added"){	
+					$('.alert').removeClass("alert-danger");
+					$('.alert').addClass("alert-success");
+					$('.alert').show();
+					$('.alert').html("Added");
+				} else {
+					$('.alert').removeClass("alert-success");
+					$('.alert').addClass("alert-danger");
+					$('.alert').show();
+					$('.alert').html("Store is already in the system");
+				}
+			}
+		});
+	});
+
+	/**$("#uploadStores").click(function() { 
+
+		$('#fileUpload').parse({
+		config: {
+			delimiter: "auto",
+	
+		},
+		before: function(file, inputElem)
+		{
+			//console.log("Parsing file...", file);
+		},
+		error: function(err, file)
+		{
+			//console.log("ERROR:", err, file);
+		},
+		complete: function()
+		{
+			//console.log("Done with all files");
+		}
+		/**console.log("click upload stores");
+
+		var fd = new FormData();
+		
+		//console.log($("#fileUpload").length > 0);
+		console.log($("#fileUpload").prop('files').length);
+
+		if($("#fileUpload").prop('files').length == 1){
+			file = $("#fileUpload").prop('files')[0];
+			
+			fd.append("stores", file);
+
+			$.ajax({
+				url: "/stores_add", 
+				type: "POST",
+				data: fd, 
+				processData: false,
+				contentType: false,
+				success: function(result) {
+					//Redirect the user to the cmpleted order
+					console.log("AJAX success: " + result);
+					
+				}
+			});
+			
+		}
+
+		//fd.append('file', $("#fileUpload").files[0]);
+
+		console.log("end click upload stores");
+	});
+		
+	});**/
+</script>
