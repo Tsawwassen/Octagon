@@ -290,7 +290,6 @@ app.get('/parts_view', ensureAuthenticated,  function(req, res){
 });
 app.get('/parts_list', function(req, res){
 	db.parts.find({}, { 'partNumber': 1, 'partDescription':1 }, function(errFind, docsFind){
-   
 		res.json(docsFind.sort( function(a,b){
 			return a.partNumber.localeCompare(b.partNumber);
 		}));
