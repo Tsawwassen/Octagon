@@ -29,7 +29,7 @@
 	});
 
 	function createPartList(item){
-		$("#partList").append("<option value='" + item.partNumber + "'>" + item.partNumber + "</option>");
+		$("#partList").append("<option value='" + item.partNumber + "'>" + item.partNumber + " - " + item.partDescription + "</option>");
 	};
 
 	$("#partList").change(function(){
