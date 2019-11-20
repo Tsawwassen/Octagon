@@ -117,6 +117,7 @@
 					clearTable(table);
 					var tableBody = document.getElementById('tableBody');
 					buildTable(tableBody, part);
+					$('#partList option:selected').text(part.partNumber + " - " + part.partDescription);
 				}else {
 					console.log('error updated part')
 				}
