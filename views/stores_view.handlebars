@@ -123,6 +123,7 @@
 					clearTable(table);
 					var tableBody = document.getElementById('tableBody');
 					buildTable(tableBody, store);
+					$('#storeList option:selected').text(store.storeNumber + " - " + store.address.streetAddress);
 				}else {
 					console.log('error updated store')
 				}
