@@ -2,5 +2,6 @@ node_modules/
 octagon.sublime-workspace
 octagon.sublime-project
 package-lock.json
-
+stderr.txt
+stdout.txt
 
