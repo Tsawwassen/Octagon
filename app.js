@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 var mongojs = require('mongojs');
 //Used the create ObjectID to search the _id field
 var ObjectId = require('mongojs').ObjectID;
-var db = mongojs('octagon', ['stores', 'parts']);
+var db = mongojs('octagon', ['stores', 'parts', 'tickets']);
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/loginapp');
 
@@ -322,3 +322,26 @@ function sortJSONArray(prop){
         return 0;  
     }
 }
+
+app.get('/ticket_add', function(req, res) {
+	res.render('ticket_add');
+});
+
+app.post('/ticket_add', function(req, res){
+	db.tickets.find({}, function(errFind, docsFind){
+		req.body.ticket = ((docsFind.length + 1) + "").padStart(6,'0');
+
+		db.tickets.insert(req.body, function(err, docs){
+			if(err){
+				console.log(err);
+			}
+			else{
+				res.end(req.body.ticket);
+			}
+		});
+	});
+});
+app.get('/ticket_view/:ticket', function(req, res){
+	console.log("hello");
+	res.render('tickets_view_ticket');
+});

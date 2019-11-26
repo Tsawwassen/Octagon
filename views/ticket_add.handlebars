@@ -1,0 +1,66 @@
+<h3> Add Ticket </h3>
+
+<form>
+ 	<div class="form-group">
+		<label for="starbucksTicketNumber">Starbucks Ticket Number</label>
+    	<input type="text" class="form-control" id="starbucksTicketNumber"  placeholder="Starbucks Ticket Number">
+	</div>
+	<div class="form-group">
+		<label for="starbucksTicketNumber">Select a Store</label>
+			<select id="storeList" class="custome-select col-12">
+				<option selected>Select a Store</option>
+			</select>
+	</div>
+	<div class="form-group">
+		<label for="description">Description</label>
+    	<input type="text" class="form-control" id="description"  placeholder="Description">
+	</div>
+
+	<div class="form-group">
+		<label for="machine">Machine</label>
+    	<input type="text" class="form-control" id="machine"  placeholder="Machine">
+	</div>
+	
+	<div>
+ 		<button type="button" id ="addTicket" class="btn btn-primary">Submit</button>
+ 	</div>
+</form>
+
+<script>
+	$( document ).ready(function() {
+    	$.ajax({
+			url: '/stores_list', 
+			type: 'GET',
+			contentType: 'application/json',
+			success: function(result) {
+				result.forEach(createStoreList);
+			}
+		});
+	});
+
+	function createStoreList(item){
+		$("#storeList").append("<option value='" + item.storeNumber + "'>" + item.storeNumber + " - "+ item.address.streetAddress + "</option>");
+	};
+
+	$("#addTicket").click(function() { 
+		ticket = {};
+		ticket.starbucksTicketNumber = $('#starbucksTicketNumber').val();
+		ticket.storeNumber = $('#storeList').val();
+		ticket.description = $('#description').val();
+		ticket.machine = $('#machine').val();
+
+		$.ajax({
+			url: "/ticket_add", 
+			type: "POST",
+			contentType: 'application/json',
+			data: JSON.stringify(ticket),
+			success: function(result) {
+		
+			}
+		});
+
+
+
+	});
+
+</script>
