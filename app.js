@@ -342,6 +342,10 @@ app.post('/ticket_add', function(req, res){
 	});
 });
 app.get('/ticket_view/:ticket', function(req, res){
-	console.log("hello");
-	res.render('tickets_view_ticket');
+	db.tickets.find(req.params, function(errFind,docsFind){
+		//console.log(docsFind);
+		res.body = docsFind[0];
+		console.log(res.body);
+		res.render('tickets_view_ticket');
+	});
 });

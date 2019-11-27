@@ -55,7 +55,7 @@
 			contentType: 'application/json',
 			data: JSON.stringify(ticket),
 			success: function(result) {
-		
+				window.location.href = '/ticket_view/' + result;
 			}
 		});
 
