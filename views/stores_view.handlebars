@@ -3,6 +3,9 @@
 	<h5>Select Store </h5>
 	<select id="storeList" class="custome-select col-12">
 		<option selected>Select a Store</option>
+		{{#each stores}}
+			<option value= {{storeNumber}}> {{storeNumber}} - {{address.streetAddress}} </option>
+		{{/each}}
 	</select>
 </div>
 
@@ -20,20 +23,6 @@
 
 
 <script>
-	$( document ).ready(function() {
-    	$.ajax({
-			url: '/stores_list', 
-			type: 'GET',
-			contentType: 'application/json',
-			success: function(result) {
-				result.forEach(createStoreList);
-			}
-		});
-	});
-
-	function createStoreList(item){
-		$("#storeList").append("<option value='" + item.storeNumber + "'>" + item.storeNumber + " - "+ item.address.streetAddress + "</option>");
-	};
 
 	$("#storeList").change(function(){
 		$.ajax({

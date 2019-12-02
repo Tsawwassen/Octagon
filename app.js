@@ -246,7 +246,12 @@ app.put('/store_edit', function(req, res){
 });
 
 app.get('/stores_view', ensureAuthenticated, function(req, res){
-	res.render('stores_view');
+	db.stores.find({}, { 'storeNumber': 1, 'address.streetAddress': 1 }, function(errFind, docsFind){
+		docsFind.sort( function(a,b){
+			return a.storeNumber.localeCompare(b.storeNumber);
+		});
+		res.render('stores_view', {stores: docsFind});
+	});
 });
 
 app.get('/stores_list', function(req, res){
