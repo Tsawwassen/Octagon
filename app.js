@@ -330,6 +330,7 @@ app.get('/ticket_add', function(req, res) {
 app.post('/ticket_add', function(req, res){
 	db.tickets.find({}, function(errFind, docsFind){
 		req.body.ticket = ((docsFind.length + 1) + "").padStart(6,'0');
+		req.body.status = "New";
 
 		db.tickets.insert(req.body, function(err, docs){
 			if(err){
@@ -343,9 +344,6 @@ app.post('/ticket_add', function(req, res){
 });
 app.get('/ticket_view/:ticket', function(req, res){
 	db.tickets.find(req.params, function(errFind,docsFind){
-		//console.log(docsFind);
-		res.body = docsFind[0];
-		console.log(res.body);
-		res.render('tickets_view_ticket');
+		res.render('tickets_view_ticket', docsFind[0]);
 	});
 });
