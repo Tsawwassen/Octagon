@@ -3,6 +3,9 @@
 	<h5>Select Part </h5>
 	<select id="partList" class="custome-select col-12">
 		<option selected>Select a Part</option>
+		{{#each parts}}
+			<option value= {{partNumber}}> {{partNumber}} - {{partDescription}} </option>
+		{{/each}}
 	</select>
 </div>
 
@@ -17,21 +20,6 @@
 </div>
 
 <script>
-	$( document ).ready(function() {
-    	$.ajax({
-			url: '/parts_list', 
-			type: 'GET',
-			contentType: 'application/json',
-			success: function(result) {
-				result.forEach(createPartList);
-			}
-		});
-	});
-
-	function createPartList(item){
-		$("#partList").append("<option value='" + item.partNumber + "'>" + item.partNumber + " - " + item.partDescription + "</option>");
-	};
-
 	$("#partList").change(function(){
 		$.ajax({
 			url: '/part/'+ $('#partList').val(), 

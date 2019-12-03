@@ -291,7 +291,13 @@ app.post('/part_add', function(req, res){
 });
 
 app.get('/parts_view', ensureAuthenticated,  function(req, res){
-	res.render('parts_view');
+	db.parts.find({}, { 'partNumber': 1, 'partDescription':1 }, function(errFind, docsFind){
+		docsFind.sort( function(a,b){
+			return a.partNumber.localeCompare(b.partNumber);
+		});
+		res.render('parts_view', {parts: docsFind});
+	});
+	
 });
 app.get('/parts_list', function(req, res){
 	db.parts.find({}, { 'partNumber': 1, 'partDescription':1 }, function(errFind, docsFind){
