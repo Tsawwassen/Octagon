@@ -4,6 +4,9 @@
 <p>Machine {{machine}}</p>
 <p>Ticket {{ticket}}</p>
 <p>Status {{status}}</p>
+<p>Notes {{notes}}</p>
+<p>Billed {{billed}}</p>
+<p>Closed {{closed}}</p>
 
 <div>	
  	<button type="button" id ="closeTicket" class="btn btn-primary">Close Ticket</button>
@@ -14,5 +17,14 @@
 
 
 <script>
-
+	$("#closeTicket").click(function() { 
+		$.ajax({
+			url: "/close_ticket/{{ticket}}", 
+			type: "PUT",
+			contentType: 'application/json',
+			success: function(result) {
+				window.location.href = '/ticket_view/{{ticket}}';
+			}
+		});
+	});
 </script>
