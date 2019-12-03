@@ -1,0 +1,16 @@
+<table class="table">
+	<thead class="thead-light">
+		<td scope="col">Starbucks Ticket Number</td>
+		<td scope="col">Ticket Number</td>
+		<td scope="col">Store Number</td>
+		<td scope="col">Link</td>
+	</thead>
+	{{#each open_tickets}}
+		<tr>
+			<td>{{starbucksTicketNumber}}</td>
+			<td>{{ticket}}</td>
+			<td>{{storeNumber}}</td>
+			<td><a href="/ticket_view/{{ticket}}">View</a></td>
+		</tr>
+	{{/each}}
+</table>

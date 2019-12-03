@@ -334,7 +334,7 @@ function sortJSONArray(prop){
     }
 }
 
-app.get('/ticket_add', function(req, res) {
+app.get('/ticket_add', ensureAuthenticated, function(req, res) {
 	res.render('ticket_add');
 });
 
@@ -342,6 +342,9 @@ app.post('/ticket_add', function(req, res){
 	db.tickets.find({}, function(errFind, docsFind){
 		req.body.ticket = ((docsFind.length + 1) + "").padStart(6,'0');
 		req.body.status = "New";
+		req.body.notes = [];
+		req.body.billed = false;
+		req.body.closed = false;
 
 		db.tickets.insert(req.body, function(err, docs){
 			if(err){
@@ -353,8 +356,21 @@ app.post('/ticket_add', function(req, res){
 		});
 	});
 });
-app.get('/ticket_view/:ticket', function(req, res){
+app.get('/ticket_view/:ticket', ensureAuthenticated, function(req, res){
 	db.tickets.find(req.params, function(errFind,docsFind){
 		res.render('tickets_view_ticket', docsFind[0]);
+	});
+});
+
+app.get('/open_tickets', ensureAuthenticated, function(req, res){
+	db.tickets.find({closed: false}, function(errFind, docsFind){
+		res.render('open_tickets', {open_tickets: docsFind});
+	});
+	
+});
+app.put('/close_ticket/:ticket', function(req, res){
+	console.log(req.params);
+	db.tickets.update(req.params, {$set:{'closed': true}}, function(errUpdate, resUpdate){
+		res.end("closed");
 	});
 });
