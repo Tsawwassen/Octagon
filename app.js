@@ -369,7 +369,6 @@ app.get('/open_tickets', ensureAuthenticated, function(req, res){
 	
 });
 app.put('/close_ticket/:ticket', function(req, res){
-	console.log(req.params);
 	db.tickets.update(req.params, {$set:{'closed': true}}, function(errUpdate, resUpdate){
 		res.end("closed");
 	});
